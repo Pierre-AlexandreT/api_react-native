@@ -10,8 +10,8 @@ const Route = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="List" component={List} />
         <Stack.Screen name="Detail" component={Detail} />
+        <Stack.Screen name="List" component={List} />
       </Stack.Navigator>
     </NavigationContainer>
   );

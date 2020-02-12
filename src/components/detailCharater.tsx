@@ -1,30 +1,22 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image, SafeAreaView} from 'react-native';
-import ViewPager from '@react-native-community/viewpager';
-import {useCharacter} from '../useEffect/useCharacter';
-import ListEpisode from '../components/ListEpisode';
-import DetailCharacter from '../components/detailCharater';
-import {useListCharacter} from '../useEffect/useListCharacter';
+import {View, Text, StyleSheet, Image} from 'react-native';
+import {Character} from '../model/character';
+import ListEpisode from './ListEpisode';
 
-const Detail = () => {
-  const currentCharacter = useCharacter(1).character;
+export type detailCharacterProps = {
+  currentCharacter: Character | null;
+};
 
-  // var page: number = 0;
-
-  // var listCharacter = useListCharacter();
-
+const DetailCharacter: React.FC<detailCharacterProps> = ({
+  currentCharacter,
+}) => {
   return (
-    // <ViewPager
-    //   initialPage={0}
-    //   style={{
-    //     flex: 1,
-    //   }}></ViewPager>
-    <View style={{flex: 1, backgroundColor: 'grey'}}>
+    <View style={{flex: 1}}>
       <View
         style={[
           {
             backgroundColor: 'steelblue',
-            flex: 3,
+            flex: 2,
             alignItems: 'center',
             marginTop: 20,
           },
@@ -55,7 +47,7 @@ const Detail = () => {
         style={[
           {
             backgroundColor: 'steelblue',
-            flex: 2,
+            flex: 3,
             alignItems: 'center',
             marginTop: 20,
           },
@@ -77,14 +69,7 @@ const styles = StyleSheet.create({
     elevation: 10,
     borderRadius: 15,
   },
-  imageStyle: {width: 200, height: 200, margin: 20},
+  imageStyle: {width: 100, height: 100, margin: 20},
 });
 
-export default Detail;
-
-// {listCharacter !== null &&
-//   listCharacter.listcharacter!.map(el => (
-//     <View>
-//       <DetailCharacter currentCharacter={el}></DetailCharacter>
-//     </View>
-//   ))}
+export default DetailCharacter;
