@@ -2,7 +2,7 @@ import {useEffect, useState} from 'react';
 import {loadCharacter, loadPageInfo} from '../network/loadPageInfo';
 import {InfoPage} from '../model/InfoPage';
 
-export const useGetSearchCharacter = (page: number) => {
+export const useGetSearchCharacter = (page: number, characterName: string | null) => {
   const [characters, setCharacters] = useState<InfoPage>();
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -10,15 +10,14 @@ export const useGetSearchCharacter = (page: number) => {
   useEffect(() => {
     let cancel = false;
     setLoading(true);
-    // if (!cancel && characterName !== null) {
-    //   loadCharacter(characterName, page)
-    //     .then(value => {
-    //       setCharacters(value);
-    //       setLoading(false);
-    //     })
-    //     .catch(() => setError(true));
-    // } else if (characterName === null) {
-    if (!cancel) {
+    if (!cancel && characterName !== null) {
+      loadCharacter(characterName, page)
+        .then(value => {
+          setCharacters(value);
+          setLoading(false);
+        })
+        .catch(() => setError(true));
+    } else if (characterName === null) {
       loadPageInfo(page)
         .then(value => {
           setCharacters(value);
@@ -32,7 +31,7 @@ export const useGetSearchCharacter = (page: number) => {
     return () => {
       cancel = true;
     };
-  }, [page]);
+  }, [page, characterName]);
 
   return {characters, loading};
 };
