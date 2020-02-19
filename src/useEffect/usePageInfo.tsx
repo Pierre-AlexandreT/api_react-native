@@ -2,7 +2,10 @@ import {useEffect, useState} from 'react';
 import {loadCharacter, loadPageInfo} from '../network/loadPageInfo';
 import {InfoPage} from '../model/InfoPage';
 
-export const useGetSearchCharacter = (page: number, characterName: string | null) => {
+export const useGetSearchCharacter = (
+  page: number,
+  characterName: string | null,
+) => {
   const [characters, setCharacters] = useState<InfoPage>();
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);

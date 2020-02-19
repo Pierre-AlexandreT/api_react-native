@@ -18,53 +18,38 @@ type ListProps = {
 };
 
 const List: React.FC<ListProps> = ({navigation}) => {
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
 
-  const [searchValue, setSearchValue] = useState<string | null>(null);
+  const [searchValue, setSearchValue] = useState('');
 
   const {characters, loading} = useGetSearchCharacter(page, searchValue);
 
-  const [list, setList] = useState<Array<Character>>([]);
+  const [list, setList] = useState(characters?.results);
 
-  const [listSearch, setListSearch] = useState<Array<Character>>([]);
+  const [newData, setNewData] = useState(false);
 
-  useEffect(() => {
-    let cancel = false;
-
-    if (!cancel && characters !== undefined) {
-      if (searchValue !== null) {
-        setListSearch(l => l.concat(characters.results));
-      } else {
-        setList(l => l.concat(characters.results));
-      }
-    }
-
-    return () => {
-      cancel = true;
-    };
-  }, [characters, searchValue]);
+  // useEffect(() => {
+  //
+  //   setList(characters.results);
+  // }, [newData]);
 
   const addData = () => {
     console.log('addDate');
     if (characters !== undefined && page < characters.info.pages) {
       setPage(page + 1);
+      setList(list?.concat(characters.results));
     }
   };
 
   return (
     <View>
-      <SearchBar
-        value={searchValue === null ? '' : searchValue}
-        onChangeText={text =>
-          text === '' ? setSearchValue(null) : setSearchValue(text)
-        }
-      />
-      {list && characters && (
+      <SearchBar value={searchValue} onChangeText={setSearchValue} />
+      {list && (
         <FlatList
           numColumns={2}
           onEndReached={addData}
           onEndReachedThreshold={0.5}
-          data={searchValue === null ? list : characters.results}
+          data={list}
           keyExtractor={(item, index) => item.id + index + item.name}
           renderItem={({item}) => (
             <CharacterListItem
