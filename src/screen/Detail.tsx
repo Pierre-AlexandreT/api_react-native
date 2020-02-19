@@ -5,16 +5,23 @@ import {useCharacter} from '../useEffect/useCharacter';
 import ListEpisode from '../components/ListEpisode';
 import DetailCharacter from '../components/detailCharater';
 import {useListCharacter} from '../useEffect/useListCharacter';
+import {RootStackParamList} from '../Route';
+import {RouteProp} from '@react-navigation/native';
 
-const Detail = () => {
-  const currentCharacter = useCharacter(1).character;
+type DetailProps = {
+  route: ProfileScreenRouteProp;
+};
+
+const Detail: React.FC<DetailProps> = ({route}) => {
+  const {id} = route.params;
+
+  const currentCharacter = useCharacter(id).character;
 
   // var page: number = 0;
 
   // var listCharacter = useListCharacter();
 
   return (
-    // <ViewPager
     //   initialPage={0}
     //   style={{
     //     flex: 1,
