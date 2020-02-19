@@ -22,9 +22,9 @@ const List: React.FC<ListProps> = ({navigation}) => {
 
   const [searchValue, setSearchValue] = useState('');
 
-  const {characters, loading} = useGetSearchCharacter(page, searchValue);
+  const {infoPage, loading} = useGetSearchCharacter(page, searchValue);
 
-  const [list, setList] = useState(characters?.results);
+  var list = infoPage?.results;
 
   const [newData, setNewData] = useState(false);
 
@@ -35,15 +35,16 @@ const List: React.FC<ListProps> = ({navigation}) => {
 
   const addData = () => {
     console.log('addDate');
-    if (characters !== undefined && page < characters.info.pages) {
+    if (infoPage !== undefined && page < infoPage.info.pages) {
       setPage(page + 1);
-      setList(list?.concat(characters.results));
+      list!.concat(infoPage.results);
     }
   };
 
   return (
     <View>
       <SearchBar value={searchValue} onChangeText={setSearchValue} />
+      <Text>{searchValue}</Text>
       {list && (
         <FlatList
           numColumns={2}

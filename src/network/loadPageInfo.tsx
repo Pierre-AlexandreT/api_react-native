@@ -6,8 +6,8 @@ export const loadPageInfo = (page: number) => {
   >(res => res.json());
 };
 
-export const loadCharacter = (character: string, page: number) => {
+export const loadCharacter = (search: string, page: number) => {
   return fetch(
-    `https://rickandmortyapi.com/api/character/?name=${character}&page=${page}`,
+    `https://rickandmortyapi.com/api/character/?name=${search}&page=${page}`,
   ).then<InfoPage>(res => res.json());
 };

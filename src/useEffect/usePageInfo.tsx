@@ -4,26 +4,26 @@ import {InfoPage} from '../model/InfoPage';
 
 export const useGetSearchCharacter = (
   page: number,
-  characterName: string | null,
+  searchText: string | null,
 ) => {
-  const [characters, setCharacters] = useState<InfoPage>();
+  const [infoPage, setInfoPage] = useState<InfoPage>();
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     let cancel = false;
     setLoading(true);
-    if (!cancel && characterName !== null) {
-      loadCharacter(characterName, page)
+    if (!cancel && searchText !== null) {
+      loadCharacter(searchText, page)
         .then(value => {
-          setCharacters(value);
+          setInfoPage(value);
           setLoading(false);
         })
         .catch(() => setError(true));
-    } else if (characterName === null) {
+    } else if (searchText === null) {
       loadPageInfo(page)
         .then(value => {
-          setCharacters(value);
+          setInfoPage(value);
           setLoading(false);
         })
         .catch(() => setError(true));
@@ -34,7 +34,7 @@ export const useGetSearchCharacter = (
     return () => {
       cancel = true;
     };
-  }, [page, characterName]);
+  }, [page, searchText]);
 
-  return {characters, loading};
+  return {infoPage, loading};
 };
