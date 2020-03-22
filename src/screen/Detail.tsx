@@ -11,7 +11,6 @@ type DetailProps = {
 
 const Detail: React.FC<DetailProps> = ({route}) => {
   const {id} = route.params;
-  //console.log(props)
   return (
     <View>
       <Text>{id}</Text>
