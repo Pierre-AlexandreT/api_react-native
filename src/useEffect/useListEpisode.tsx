@@ -3,15 +3,15 @@ import {Episode} from '../model/episode';
 
 import {fetchEpisode} from '../network/loadEpisode';
 
-export const useListEpisode = (urls: Array<string>) => {
-  const [listEpisode, setListEpisode] = useState<Array<Episode> | null>(null);
+export const useListEpisode = (urls: Array<string> | undefined) => {
+  const [listEpisode, setListEpisode] = useState<Array<Episode>>([]);
 
-  const [loading, setLoading] = useState(false);
+  const [loadingEpisode, setLoading] = useState(false);
 
   useEffect(() => {
     let cancel = false;
 
-    if (!cancel) {
+    if (!cancel && urls) {
       setLoading(true);
       fetchEpisode(urls)
         .then(res => {
@@ -26,5 +26,5 @@ export const useListEpisode = (urls: Array<string>) => {
     };
   }, [urls]);
 
-  return {listEpisode, loading};
+  return {listEpisode, loadingEpisode};
 };

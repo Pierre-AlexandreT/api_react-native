@@ -1,97 +1,138 @@
-import React from 'react';
-import {View, Text, StyleSheet, Image, SafeAreaView} from 'react-native';
-import ViewPager from '@react-native-community/viewpager';
+import React, {useState} from 'react';
+import {Image, SafeAreaView, SectionList, StyleSheet, Text, View} from 'react-native';
 import {useCharacter} from '../useEffect/useCharacter';
-import ListEpisode from '../components/ListEpisode';
-import DetailCharacter from '../components/detailCharater';
-import {useListCharacter} from '../useEffect/useListCharacter';
 import {RootStackParamList} from '../Route';
 import {RouteProp} from '@react-navigation/native';
+import {Icon} from 'react-native-elements'
+import {useListEpisode} from "../useEffect/useListEpisode";
+import SectionHeader from "../components/DetailComponents/SectionHeader";
+import SectionItem from "../components/DetailComponents/SectionItem";
+import {Episode} from "../model/episode";
+import ProfileDetail from "../components/DetailComponents/ProfileDetail";
+import EpisodeDetailDialog from "../components/DetailComponents/EpisodeDetailDialog";
+import {ActivityIndicator} from "react-native-paper";
+
+type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'Detail'>;
 
 type DetailProps = {
-  route: ProfileScreenRouteProp;
+    route: ProfileScreenRouteProp;
 };
 
 const Detail: React.FC<DetailProps> = ({route}) => {
-  const {id} = route.params;
+    const {id} = route.params;
 
-  const currentCharacter = useCharacter(id).character;
+    const [showEpisode, setShowEpisode] = useState(false);
+    const [showProfile, setShowProfile] = useState(true);
+    const [showEpisodeDetailDialog, setShowEpisodeDetailDialog] = useState(false);
+    const [chooseEpisodeUrl, setChooseEpisodeUrl] = useState("");
 
-  // var page: number = 0;
+    const {character, loading} = useCharacter(id);
 
-  // var listCharacter = useListCharacter();
+    const {listEpisode, loadingEpisode} = useListEpisode(character?.episode);
 
-  return (
-    //   initialPage={0}
-    //   style={{
-    //     flex: 1,
-    //   }}></ViewPager>
-    <View style={{flex: 1, backgroundColor: 'grey'}}>
-      <View
-        style={[
-          {
-            backgroundColor: 'steelblue',
-            flex: 3,
-            alignItems: 'center',
-            marginTop: 20,
-          },
-          styles.viewStyle,
-        ]}>
-        <Text style={styles.titleText}>{currentCharacter?.name}</Text>
-        <Image
-          style={styles.imageStyle}
-          source={{
-            uri: currentCharacter?.image,
-          }}
-        />
+    const sections = [
+        {
+            title: "Episode",
+            data: listEpisode
+        }
+    ];
 
-        <Text>
-          <Text style={{fontWeight: 'bold'}}>Genre : </Text>
-          {currentCharacter?.gender}
-        </Text>
-        <Text>
-          <Text style={{fontWeight: 'bold'}}>Statut : </Text>
-          {currentCharacter?.status}
-        </Text>
-        <Text>
-          <Text style={{fontWeight: 'bold'}}>Espèce : </Text>
-          {currentCharacter?.species}
-        </Text>
-      </View>
-      <View
-        style={[
-          {
-            backgroundColor: 'steelblue',
-            flex: 2,
-            alignItems: 'center',
-            marginTop: 20,
-          },
-          styles.viewStyle,
-        ]}>
-        <Text style={styles.titleText}>Episodes</Text>
-        <ListEpisode currentCharacter={currentCharacter}> </ListEpisode>
-      </View>
-    </View>
-  );
+    const changeShowEpisode = () => {
+        setShowEpisode(!showEpisode)
+    };
+
+    const changeShowProfile = () => {
+        setShowProfile(!showProfile)
+    };
+
+    const closeShowEpisodeDetailDialog = () => {
+        setShowEpisodeDetailDialog(false)
+    };
+
+    const openShowEpisodeDetailDialog = (episodeUrl: string) => {
+        setChooseEpisodeUrl(episodeUrl);
+        setShowEpisodeDetailDialog(true)
+
+    };
+
+    return (
+        <SafeAreaView style={styles.container}>
+            <EpisodeDetailDialog showDialog={showEpisodeDetailDialog} closeDialog={closeShowEpisodeDetailDialog}
+                                 episodeUrl={chooseEpisodeUrl}/>
+            <View style={styles.topContainer}>
+
+                {!loading &&
+                    <Image
+                    style={styles.image}
+                    source={{
+                        uri: character?.image
+                    }}
+                />
+                }
+                {loading &&
+                    <ActivityIndicator animating={true} color={'white'} size={'large'} />
+                }
+                <Text style={styles.titleText}>{character?.name}</Text>
+                <View style={styles.locationContainer}>
+                    <Icon name={"location-on"} color={'white'}/>
+                    <Text style={styles.subTitle}>{character?.location.name}</Text>
+                </View>
+            </View>
+            <View style={styles.bottomContainer}>
+                {
+                    character &&
+                    <View>
+                        <SectionHeader title={'Profils'} onPress={changeShowProfile} showing={showProfile}/>
+                        <ProfileDetail character={character} showing={showProfile}/>
+                    </View>
+                }
+                {
+                    !loadingEpisode &&
+                    <SectionList
+                        renderItem={({item}: { item: Episode }) => showEpisode ?
+                            <SectionItem episode={item} onPress={openShowEpisodeDetailDialog}/> : null}
+                        renderSectionHeader={({section: {title}}) => (
+                            <SectionHeader title={title} onPress={changeShowEpisode} showing={showEpisode}/>)}
+                        sections={sections}
+                        stickySectionHeadersEnabled={true}/>
+                }
+                {
+                    loadingEpisode &&
+                    <ActivityIndicator animating={true} color={'#3f51b5'} size={'large'} />
+                }
+
+            </View>
+        </SafeAreaView>
+    );
 };
 
 const styles = StyleSheet.create({
-  titleText: {fontSize: 28, fontWeight: 'bold', marginTop: 10},
-  viewStyle: {
-    marginLeft: 50,
-    marginRight: 50,
-    marginBottom: 20,
-    elevation: 10,
-    borderRadius: 15,
-  },
-  imageStyle: {width: 200, height: 200, margin: 20},
+    titleText: {fontSize: 28, fontWeight: 'bold', marginVertical: 5, color: 'white'},
+    subTitle: {fontWeight: 'bold', marginVertical: 5, color: 'white'},
+    container: {
+        flex: 1
+    },
+    topContainer: {
+        flex: 0.30,
+        backgroundColor: '#3f51b5',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 10,
+    },
+    bottomContainer: {
+        flex: 0.70,
+    },
+    image: {
+        height: 100,
+        width: 100,
+        borderRadius: 10,
+        borderWidth: 2,
+        borderColor: 'white'
+    },
+    locationContainer: {
+        flex: 1,
+        flexDirection: 'row',
+    }
 });
 
 export default Detail;
-
-// {listCharacter !== null &&
-//   listCharacter.listcharacter!.map(el => (
-//     <View>
-//       <DetailCharacter currentCharacter={el}></DetailCharacter>
-//     </View>
-//   ))}

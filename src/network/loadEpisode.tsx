@@ -1,7 +1,7 @@
 import {Episode} from '../model/episode';
 
-export const loadEpisode = (url: string) => {
-  return fetch(url).then<Episode>(res => res.json());
+export const loadEpisode = async(url: string) => {
+  return await fetch(url).then<Episode>(res => res.json());
 };
 
 export async function fetchEpisode(urls: Array<string>) {

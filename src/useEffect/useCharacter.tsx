@@ -4,7 +4,7 @@ import {Character} from '../model/character';
 import {loadCharacter} from '../network/loadCharacter';
 
 export const useCharacter = (id: number) => {
-  const [character, setCharacter] = useState<Character | null>(null);
+  const [character, setCharacter] = useState<Character>();
 
   const [loading, setLoading] = useState(false);
 

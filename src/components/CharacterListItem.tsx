@@ -17,7 +17,7 @@ const CharacterListItem: React.FC<CharacterListItemProps> = ({
       style={styles.container}>
       <View>
         <Image
-          style={{width: 100, height: 100}}
+          style={styles.image}
           source={{
             uri: character.image,
           }}
@@ -45,4 +45,5 @@ const styles = StyleSheet.create({
     margin: 5,
     color: 'white',
   },
+  image:{width: 100, height: 100}
 });

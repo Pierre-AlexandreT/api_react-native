@@ -11,15 +11,26 @@ export type RootStackParamList = {
 
 const Stack = createStackNavigator<RootStackParamList>();
 
+const routeOption = {
+  headerStyle: {
+    backgroundColor: '#b5593f',
+  },
+  headerTitleStyle: {
+    color: 'white',
+  },
+  headerTintColor: 'white',
+};
+
 const Route = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="List" component={List} />
+        <Stack.Screen name="List" component={List} options={routeOption} />
         <Stack.Screen
           name="Detail"
           component={Detail}
           initialParams={{id: 0}}
+          options={routeOption}
         />
       </Stack.Navigator>
     </NavigationContainer>

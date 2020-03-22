@@ -11,11 +11,16 @@
 import React from 'react';
 import 'react-native-gesture-handler';
 import Route from './src/Route';
+import {Provider} from 'react-native-paper';
 
 declare var global: {HermesInternal: null | {}};
 
 const App = () => {
-  return <Route />;
+  return (
+    <Provider>
+      <Route />
+    </Provider>
+  );
 };
 
 export default App;
