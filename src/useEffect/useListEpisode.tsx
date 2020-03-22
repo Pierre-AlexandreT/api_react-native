@@ -2,8 +2,9 @@ import {useEffect, useState} from 'react';
 import {Episode} from '../model/episode';
 
 import {fetchEpisode} from '../network/loadEpisode';
+import {Character} from '../model/character';
 
-export const useListEpisode = (urls: Array<string> | undefined) => {
+export const useListEpisode = (character: Character | undefined) => {
   const [listEpisode, setListEpisode] = useState<Array<Episode>>([]);
 
   const [loadingEpisode, setLoading] = useState(false);
@@ -11,9 +12,9 @@ export const useListEpisode = (urls: Array<string> | undefined) => {
   useEffect(() => {
     let cancel = false;
 
-    if (!cancel && urls) {
+    if (!cancel && character && character.episode) {
       setLoading(true);
-      fetchEpisode(urls)
+      fetchEpisode(character.episode)
         .then(res => {
           setListEpisode(res);
           setLoading(false);
@@ -24,7 +25,7 @@ export const useListEpisode = (urls: Array<string> | undefined) => {
     return () => {
       cancel = true;
     };
-  }, [urls]);
+  }, [character]);
 
   return {listEpisode, loadingEpisode};
 };
